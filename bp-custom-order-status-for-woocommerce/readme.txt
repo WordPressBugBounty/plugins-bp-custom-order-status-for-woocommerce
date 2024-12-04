@@ -1,12 +1,12 @@
 === Custom Order Status Manager for WooCommerce ===
-Contributors: brightvesseldev, im_niloy, kleinmannbrightvessel
+Contributors: brightvesseldev, niloybrightvessel, kleinmannbrightvessel
 Requires at least: 5.0
 Tags: custom order status,custom status,order status,statuses
 Requires PHP: 7.4
 WC tested up to: 9.4
 Tested up to: 6.7
 WC requires at least: 4.0
-Stable tag: 1.1.4
+Stable tag: 1.1.5
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -77,6 +77,9 @@ We decided to make the plugin entirely free to support the community and store o
 
 
 == Changelog ==
+
+= 1.1.5 -  4 Dec 24 =
+* Fixed: remove dashboard notice
 
 = 1.1.4 -  Date 28 Nov 24 =
 * Fixed: `default_body_text` php error

@@ -26,9 +26,6 @@ class Bootstrap {
 
 		add_action( 'admin_notices', [$this, 'review'] );
 		add_action( 'admin_init', [$this, 'url_param_check'] );
-		add_action( 'admin_init', array( 'PAnD', 'init' ) );
-		add_action( 'admin_notices', [$this, 'show_woddp_notice'] );
-		add_action( 'admin_notices', [$this, 'show_woddp_notice'] );
 		add_filter( 'cosm_upsale_notice', [$this, 'cosm_upsale_notice_render'] );
 	}
 	/**
@@ -59,20 +56,7 @@ class Bootstrap {
 
 		}
 	}
-	/**
-	 * @return null
-	 */
-	public function show_woddp_notice() {
-		if ( $this->woddp_activate || !\PAnD::is_admin_notice_active( 'woddp-notice-35' ) ) {
-			return;
-		}
-
-		?>
-			<div data-dismissible="woddp-notice-35" class="info notice notice-info is-dismissible">
-				<p><?php _e( '🌟 Checkout our new <b>Order Delivery Date Time & Pickup for WooCommerce</b> plugin.It\'s enables customers to conveniently select the date and time they prefer for the delivery of their orders. <a href="' . $this->woddp_plugin_url . '">' . $this->woddp_title . '</a>', 'sample-text-domain' );?></p>
-			</div>
-		<?php
-}
+	
 	/**
 	 * @return null
 	 */

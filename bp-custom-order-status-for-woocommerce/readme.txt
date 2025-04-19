@@ -1,5 +1,5 @@
 === Custom Order Status Manager for WooCommerce ===
-Contributors: brightvesseldev, niloybrightvessel, kleinmannbrightvessel
+Contributors: brightvesseldev, kleinmannbrightvessel
 Requires at least: 5.0
 Tags: custom order status,custom status,order status,statuses
 Requires PHP: 7.4

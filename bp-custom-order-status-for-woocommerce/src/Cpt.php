@@ -8,8 +8,10 @@ class Cpt {
 		add_action( 'admin_menu', [$this, 'add_order_status_menu'] );
 		add_action( 'parent_file', [$this, 'wc_as_highlight'] );
 		add_filter( 'enter_title_here', [$this, 'change_title_text'] );
-		$this->status_meta_box();
-
+		//$this->status_meta_box();
+		add_action( 'after_setup_theme', function(){
+            $this->status_meta_box();
+        } );
 	}
 	/**
 	 * @param $title

@@ -7,9 +7,11 @@ class Settings {
 
 		add_action( 'admin_menu', array( $this, 'bp_admin_menu' ) );
 		add_filter( "plugin_row_meta", [$this, 'pluginMetaLinks'], 20, 2 );
-		add_action( 'widgets_init', [$this, 'pluginOptions'], 9999999 );
+		//add_action( 'widgets_init', [$this, 'pluginOptions'], 9999999 );
+		add_action( 'after_setup_theme', function(){
+            $this->pluginOptions();
+        } );
 		add_filter( "plugin_action_links_" . BVOS_PLUGIN_BASE, [$this, 'add_settings_link'] );
-
 	}
 	/**
 	 * @param  $settings_tabs
@@ -92,10 +94,21 @@ class Settings {
 		) );
 
 		// Create a section
-		\CSF::createSection( $prefix, array(
-			'title'  => 'Payment Methods',
-			'fields' => $this->getPaymentOptions(),
-		) );
+        \CSF::createSection( $prefix, array(
+            'title'  => 'Payment Methods',
+            'fields' => array_merge(
+				$this->getPaymentOptions(),
+                array(
+                    // A Notice
+                    array(
+                        'type'    => 'notice',
+                        'style'   => 'info',
+                        'content' => 'Is one of your payment methods not appearing on this page or is it not working properly? It is likely not compatible with the free version <br>Please contact us through our support portal: ' . '<a href="https://brightplugins.com/support/">' . 'Support' . '</a>',
+                    ),
+  
+                ),
+            ) ,
+        ) );
 
 		do_action( 'bvos_setting_section', $prefix );
 
@@ -112,6 +125,11 @@ class Settings {
 			$available_payment_gateways = WC()->payment_gateways->payment_gateways();
 			$payment_gateways           = array();
 			foreach ( $available_payment_gateways as $key => $gateway ) {
+
+				if( !isset( $gateway->title ) || empty( $gateway->title ) ) {
+					continue;
+				}
+
 				$payment_gateways[] = array(
 					'title'   => "Default Status for: " . $gateway->title,
 					'id'      => 'orderstatus_default_statusgateway_' . $key,

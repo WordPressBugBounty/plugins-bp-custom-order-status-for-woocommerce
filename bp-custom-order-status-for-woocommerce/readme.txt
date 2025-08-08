@@ -3,10 +3,10 @@ Contributors: brightvesseldev, kleinmannbrightvessel
 Requires at least: 5.0
 Tags: custom order status,custom status,order status,statuses
 Requires PHP: 7.4
-WC tested up to: 9.4
-Tested up to: 6.7
+WC tested up to: 10.0.4
+Tested up to: 6.8.2
 WC requires at least: 4.0
-Stable tag: 1.1.5
+Stable tag: 1.2
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,8 +45,6 @@ After activating the plugin, follow these steps to create new Custom Order Statu
 * Click on the “Enable/Disable” checkbox
 * Hit the “Save Changes” button and you are done!
 
-We decided to make the plugin entirely free to support the community and store owners by including all of the features that most pro versions have, including notifications.
-
 ##See what a few WooCommerce store owners are saying about Custom Order Status Manager for WooCommerce:##
 
 > “Such a great simple but powerful plugin to extend WC functionality”.
@@ -59,16 +57,20 @@ We decided to make the plugin entirely free to support the community and store o
 > - ozviewer
 >
 
-**If you have any issues, please let us know and give us a chance to resolve and fix them.** [Visit Documentation](https://brightplugins.com/docs/customer-order-status-manager-for-woocommerce-documentation/) | [Plugin Support](https://brightplugins.com/support/)
+**If you have any issues, please let us know and give us a chance to resolve and fix them.** [Visit Documentation](https://brightplugins.com/docs/customer-order-status-manager-for-woocommerce-documentation/) | [Plugin Support](https://brightplugins.com/support/) | [Upgrade with Club](https://brightplugins.com/product/club-membership/)
 
-## 🔥 SOME OF OUR PREMIUM PLUGINS ##
+## 🔥 ALL ACCESS MEMBERSHIP 🔥 ##
+
+Unlock all 19 premium WooCommerce plugins with one club membership. [Join the Club](https://brightplugins.com/product/club-membership/)
+
+## SOME OF OUR PREMIUM PLUGINS ##
 
 [Additional Variation Images for WooCommerce](https://brightplugins.com/additional-variation-images-for-woocommerce/)
 [Min/Max Quantities for WooCommerce](https://brightplugins.com/min-max-quantities-for-woocommerce-review/)
 [Pre-Orders for WooCommerce PRO](https://brightplugins.com/woocommerce-preorder-plugin-review/)
 [Deposits for WooCommerce PRO](https://brightplugins.com/deposits-for-woocommerce/)
 
-## 🔥 SOME OF OUR FREE PLUGINS ##
+## SOME OF OUR FREE PLUGINS ##
 [Order Delivery Date Time & Pickup for WooCommerce](https://wordpress.org/plugins/bp-order-date-time-for-woocommerce/) During the checkout process, customers can effortlessly choose a delivery date and time for their orders.
 [Pre-Orders for WooCommerce](https://wordpress.org/plugins/pre-orders-for-woocommerce/)
 [Show Stock for WooCommerce](https://wordpress.org/plugins/woo-show-stock/)
@@ -77,6 +79,10 @@ We decided to make the plugin entirely free to support the community and store o
 
 
 == Changelog ==
+
+= 1.2 -  8 Aug 25 =
+* Fixed: Notice: Function _load_textdomain_just_in_time was called incorrectly.
+* Fixed: Hide the 'Complete' action for orders that have already been completed - Orders List Page
 
 = 1.1.5 -  4 Dec 24 =
 * Fixed: remove dashboard notice

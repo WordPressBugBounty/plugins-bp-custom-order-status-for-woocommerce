@@ -452,7 +452,7 @@ if ( !empty( $order->get_date_paid() ) ) {
 		$statuses = $this->wcbvCustomStatusFiltermetaActive( '_enable_action_status', true );
 		$order_id = $order->get_id();
 		// if the complete order action is not present in the array, add it .
-		if ( !in_array( 'complete', $actions, true ) ) {
+		if ( !in_array( 'complete', $actions, true ) && !$order->has_status( array( 'completed' ) ) ) {
 			$actions['complete'] = array(
 				'url'    => wp_nonce_url( admin_url( 'admin-ajax.php?action=woocommerce_mark_order_status&status=completed&order_id=' . $order_id ), 'woocommerce-mark-order-status' ),
 				'name'   => __( 'Complete', 'woocommerce' ),

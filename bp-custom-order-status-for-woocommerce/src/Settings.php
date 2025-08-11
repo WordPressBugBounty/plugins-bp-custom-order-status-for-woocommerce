@@ -3,14 +3,16 @@ namespace Brightplugins_COS;
 
 class Settings {
 
+	const CLUB_MEMBERSHIP_LINK = 'https://brightplugins.com/product/club-membership/?utm_source=freemium&utm_medium=settings_page&utm_campaign=upgrade_club_membership';
+
 	public function __construct() {
 
 		add_action( 'admin_menu', array( $this, 'bp_admin_menu' ) );
 		add_filter( "plugin_row_meta", [$this, 'pluginMetaLinks'], 20, 2 );
 		//add_action( 'widgets_init', [$this, 'pluginOptions'], 9999999 );
-		add_action( 'after_setup_theme', function(){
-            $this->pluginOptions();
-        } );
+		add_action( 'init', function(){
+			$this->pluginOptions();
+        }, 9 );
 		add_filter( "plugin_action_links_" . BVOS_PLUGIN_BASE, [$this, 'add_settings_link'] );
 	}
 	/**
@@ -88,27 +90,62 @@ class Settings {
 				array(
 					'type'    => 'notice',
 					'style'   => 'info',
-					'content' => apply_filters('cosm_upsale_notice',''),
+					'content' => apply_filters( 'cosm_upsale_notice', '' ),
 				),
 			),
 		) );
+
+		if ( !(is_admin() && isset( $_GET['page'] ) && $_GET['page'] === 'wcbv-order-status-setting') ) {
+			return;
+		}
 
 		// Create a section
         \CSF::createSection( $prefix, array(
             'title'  => 'Payment Methods',
             'fields' => array_merge(
-				$this->getPaymentOptions(),
                 array(
                     // A Notice
-                    array(
-                        'type'    => 'notice',
-                        'style'   => 'info',
-                        'content' => 'Is one of your payment methods not appearing on this page or is it not working properly? It is likely not compatible with the free version <br>Please contact us through our support portal: ' . '<a href="https://brightplugins.com/support/">' . 'Support' . '</a>',
-                    ),
-  
+					array(
+						'type'    => 'notice',
+						'style'   => 'info',
+						'content' => 'Is one of your payment methods not appearing on this page or is it not working properly? It is likely not compatible with the free version <br>Please contact us through our support portal: ' . '<a href="https://brightplugins.com/support/">' . 'Support' . '</a>',
+					),
                 ),
+				$this->getPaymentOptions(),
             ) ,
         ) );
+
+		/**
+		 * Upgrade to Club Membership section
+		 */
+
+		add_filter( 'cosmbp_advertising_place', function(){
+
+			$fire_icon = '<img draggable="false" role="img" class="emoji" alt="🔥" src="' . COSMBP_ASSETS . '/img/fire-icon.svg' . '">';
+
+			$upsale_notice = '<h3>' . $fire_icon . ' All Access Membership ' . $fire_icon . '</h3>';
+			$upsale_notice .= '<p>Unlock all 19 premium WooCommerce plugins with one club membership. <a href="' . self::CLUB_MEMBERSHIP_LINK . '">Join the Club</a></p>';
+
+			return wp_kses_post( $upsale_notice );
+		}  );
+
+		\CSF::createSection( $prefix, array(
+			'title'  => '<span style="position: absolute;z-index: 1;left: 0;top: -13px;background-color: white;padding: .2em .5em;border-radius: 6px;color: black;transform: rotate(-15deg);">New</span>Upgrade to Club Membership',
+			'icon'   => 'fas fa-lock',
+			'fields' => array(
+				array(
+					'type'    => 'notice',
+					'style'   => 'info',
+					'content' => apply_filters( 'cosmbp_advertising_place', '' ),
+				),
+				array(
+					'type'    => 'callback',
+					'function' => function(){
+						echo '<p><a href="' . self::CLUB_MEMBERSHIP_LINK . '"> <img style="max-width: 100%" src="' . COSMBP_ASSETS . '/img/pro-bp-plugins.png' . '"> </a></p>';
+					},
+				),
+			) ,
+		) );
 
 		do_action( 'bvos_setting_section', $prefix );
 
@@ -121,8 +158,11 @@ class Settings {
 	 */
 	public function getPaymentOptions() {
 		$payment_gateways = [];
-		if ( is_admin() ) {
+
+		try {
+
 			$available_payment_gateways = WC()->payment_gateways->payment_gateways();
+
 			$payment_gateways           = array();
 			foreach ( $available_payment_gateways as $key => $gateway ) {
 
@@ -139,7 +179,10 @@ class Settings {
 					'options' => 'bpcosOrderStatusList',
 				);
 			}
+		} catch (\Throwable $th) {
+			error_log( 'Bright Plugins - Custom Order Status Manager - ERROR: ' . $th->getMessage());
 		}
+		
 		return $payment_gateways;
 	}
 

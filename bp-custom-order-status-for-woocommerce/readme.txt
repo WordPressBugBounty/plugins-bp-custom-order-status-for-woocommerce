@@ -6,7 +6,7 @@ Requires PHP: 7.4
 WC tested up to: 10.0.4
 Tested up to: 6.8.2
 WC requires at least: 4.0
-Stable tag: 1.2
+Stable tag: 1.2.1
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -57,11 +57,11 @@ After activating the plugin, follow these steps to create new Custom Order Statu
 > - ozviewer
 >
 
-**If you have any issues, please let us know and give us a chance to resolve and fix them.** [Visit Documentation](https://brightplugins.com/docs/customer-order-status-manager-for-woocommerce-documentation/) | [Plugin Support](https://brightplugins.com/support/) | [Upgrade with Club](https://brightplugins.com/product/club-membership/)
+**If you have any issues, please let us know and give us a chance to resolve and fix them.** [Visit Documentation](https://brightplugins.com/docs/customer-order-status-manager-for-woocommerce-documentation/) | [Plugin Support](https://brightplugins.com/support/) | [Upgrade with Club](https://brightplugins.com/product/club-membership/?utm_source=freemium&utm_medium=wp_org_page&utm_campaign=upgrade_club_membership)
 
 ## 🔥 ALL ACCESS MEMBERSHIP 🔥 ##
 
-Unlock all 19 premium WooCommerce plugins with one club membership. [Join the Club](https://brightplugins.com/product/club-membership/)
+Unlock all 19 premium WooCommerce plugins with one club membership. [Join the Club](https://brightplugins.com/product/club-membership/?utm_source=freemium&utm_medium=wp_org_page&utm_campaign=upgrade_club_membership)
 
 ## SOME OF OUR PREMIUM PLUGINS ##
 
@@ -79,6 +79,9 @@ Unlock all 19 premium WooCommerce plugins with one club membership. [Join the Cl
 
 
 == Changelog ==
+
+= 1.2.1 -  11 Aug 25 =
+* Fixed: Security layer added using 'try-catch' for payment methods incompatible with the free version
 
 = 1.2 -  8 Aug 25 =
 * Fixed: Notice: Function _load_textdomain_just_in_time was called incorrectly.

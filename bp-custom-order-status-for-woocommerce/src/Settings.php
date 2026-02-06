@@ -11,6 +11,10 @@ class Settings {
 		add_filter( "plugin_row_meta", [$this, 'pluginMetaLinks'], 20, 2 );
 		//add_action( 'widgets_init', [$this, 'pluginOptions'], 9999999 );
 		add_action( 'init', function(){
+			if( !is_admin() ) {
+				return;
+			}
+
 			$this->pluginOptions();
         }, 9 );
 		add_filter( "plugin_action_links_" . BVOS_PLUGIN_BASE, [$this, 'add_settings_link'] );
@@ -94,10 +98,6 @@ class Settings {
 				),
 			),
 		) );
-
-		if ( !(is_admin() && isset( $_GET['page'] ) && $_GET['page'] === 'wcbv-order-status-setting') ) {
-			return;
-		}
 
 		// Create a section
         \CSF::createSection( $prefix, array(

@@ -33,4 +33,10 @@ if ( !function_exists( 'bpos_cb_strtolower_status_slug' ) ) {
 	}
 }
 
-NS7_RDNC::instance()->add_notification( 147, '25b97419f8125962', 'https://brightplugins.com' );
+/**
+ * 
+ */
+$can_new_version_be_instantiated = isset( NS7_RDNC::$version ) && version_compare( NS7_RDNC::$version, '2.0', '>=' );
+if( $can_new_version_be_instantiated ) {
+	NS7_RDNC::instance()->add_notification( 255, '3f8f60490970d1a3', 'https://brightplugins.com', 6, 'wcbv-order-status-setting' );
+}

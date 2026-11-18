@@ -3,10 +3,10 @@ Contributors: brightvesseldev, kleinmannbrightvessel
 Requires at least: 5.0
 Tags: custom order status,custom status,order status,statuses
 Requires PHP: 7.4
-WC tested up to: 11.1.0
+WC tested up to: 11.3.0
 Tested up to: 7.1
 WC requires at least: 4.0
-Stable tag: 2.1
+Stable tag: 2.1.1
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -27,9 +27,15 @@ Not all order pipelines are created equal. **Customer Order Status Manager for W
 * Enable email notifications for customers or administrators.
 * Adds a status column to the order list page.
 * Set order status for Default and Third-party Payment methods.
-* Automatic custom status transtitions (by time intervals) - **(PREMIUM)[https://brightplugins.com/product/custom-order-status-manager-for-woocommerce/?utm_source=freemium&utm_medium=wp_site&utm_campaign=upgrade_pro]**
-* Display in Woo Reports - **(PREMIUM)[https://brightplugins.com/product/custom-order-status-manager-for-woocommerce/?utm_source=freemium&utm_medium=wp_site&utm_campaign=upgrade_pro]**
-* Increase or decrease the stock level - **(PREMIUM)[https://brightplugins.com/product/custom-order-status-manager-for-woocommerce/?utm_source=freemium&utm_medium=wp_site&utm_campaign=upgrade_pro]**
+* Automatic custom status transtitions (by time intervals) - **[PREMIUM](https://brightplugins.com/product/custom-order-status-manager-for-woocommerce/?utm_source=freemium&utm_medium=wp_page&utm_campaign=upgrade_pro)**
+* Display in Woo Reports - **[PREMIUM](https://brightplugins.com/product/custom-order-status-manager-for-woocommerce/?utm_source=freemium&utm_medium=wp_page&utm_campaign=upgrade_pro)**
+* Increase or decrease the stock level - **[PREMIUM](https://brightplugins.com/product/custom-order-status-manager-for-woocommerce/?utm_source=freemium&utm_medium=wp_page&utm_campaign=upgrade_pro)**
+
+= ✨ BLACK FRIDAY DEAL - ALL PRO PLUGINS & CLUB MEMBERSHIP! =
+
+> Grab our lowest price of the year with a **[50% OFF](https://brightplugins.com/shop/?utm_source=freemium&utm_medium=wp_page&utm_campaign=black_friday_2026&utm_content=cosm)** valid on all plugins and our new **Club Membership**. You'll lock in your discounted rate as long as you renew!
+>
+> 👉 **[Claim Your 50% Discount Now](https://brightplugins.com/shop/?utm_source=freemium&utm_medium=wp_page&utm_campaign=black_friday_2026&utm_content=cosm)** *(Use coupon: **BRIGHT50** at checkout)*
 
 = How to create Custom Order Status? =
 
@@ -82,6 +88,9 @@ Unlock all 19 premium WooCommerce plugins with one club membership. [Join the Cl
 
 
 == Changelog ==
+
+= 2.1.1 - 18 Nov 26 =
+* Support for WooCommerce 11.3.x
 
 = 2.1 - 07 Sept 26 =
 * Support for WooCommerce 11.1.x

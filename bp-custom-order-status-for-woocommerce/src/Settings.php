@@ -7,6 +7,8 @@ class Settings {
 	const PRO_VERSION_LINK = 'https://brightplugins.com/product/custom-order-status-manager-for-woocommerce/?utm_source=freemium&utm_medium=plugin_page&utm_content=banner&utm_campaign=upgrade_pro';
 	const DOCS = 'https://brightplugins.com/docs/automation-rules-automatic-status-changes/';
 
+	const OFFER_URL = 'https://brightplugins.com/shop/?utm_source=freemium&utm_medium=admin_banner&utm_campaign=black_friday_2026&utm_content=cosm';
+
 	public function __construct() {
 
 		add_action( 'admin_menu', array( $this, 'bp_admin_menu' ) );
@@ -18,9 +20,32 @@ class Settings {
 			}
 
 			$this->pluginOptions();
-        }, 9 );
-		add_action( 'admin_notices', [$this, 'generate_pro_banner'] );
-		add_filter( "plugin_action_links_" . BVOS_PLUGIN_BASE, [$this, 'add_settings_link'] );
+		}, 9);
+		//add_action( 'admin_notices', [$this, 'generate_offer_banner'] );
+		
+		/**
+		 * Generate the Black Friday offer banner if the current date is before 2027-01-01.
+		 */
+		$is_offer_valid = time() < strtotime( '2027-01-01 00:00:00' );
+		if( $is_offer_valid ) {
+
+			add_action( 'wp_ajax_bp_dismiss_bf_banner', function() {
+				//...
+				check_ajax_referer( 'bp_bf_banner_nonce', 'nonce' );
+				//...
+				if( !current_user_can( 'manage_options' ) ) {
+					wp_send_json_error();
+				}
+
+				$user_id = get_current_user_id();
+				set_transient( 'bp_bf_banner_dismissed_' . $user_id, true, DAY_IN_SECONDS );
+
+				wp_send_json_success();
+			} );
+
+			add_action('admin_notices', [$this, 'generate_offer_banner']);
+		}
+		add_filter("plugin_action_links_" . BVOS_PLUGIN_BASE, [$this, 'add_settings_link']);
 	}
 	/**
 	 * @param  $settings_tabs
@@ -34,7 +59,226 @@ class Settings {
 	/**
 	 * 
 	 */
-	public function generate_pro_banner() {
+	public function generate_offer_banner()
+	{
+
+		$is_cosm_page = is_admin() && isset($_GET['page']) && $_GET['page'] === 'wcbv-order-status-setting';
+
+		$user_id      = get_current_user_id();
+		$is_dismissed = get_transient( 'bp_bf_banner_dismissed_' . $user_id );
+
+		if (!$is_cosm_page || $is_dismissed) {
+			return;
+		}
+
+		?>
+
+		<div style="display: flex;justify-content: center;flex-wrap: wrap;align-items: center;flex-direction: row;gap: 20px;">
+
+			<div class="bf-promo-banner" id="bf-promo-banner">
+				<!-- Close button -->
+				<button type="button" class="bf-promo-banner__close" aria-label="Dismiss notice" onclick="bpDismissBfBannerAjax()">
+					<span aria-hidden="true">X</span>
+				</button>
+
+				<!-- Image / Side Badge -->
+				<div class="bf-promo-banner__media">
+					<img
+						src="<?php echo esc_attr(COSMBP_ASSETS . '/img/black-friday-50-off.png'); ?>"
+						alt="50% OFF"
+						class="bf-promo-banner__img"
+						width="150"
+						height="150"
+						loading="lazy" />
+				</div>
+
+				<!-- Main content -->
+				<div class="bf-promo-banner__content">
+					<h3 class="bf-promo-banner__title">
+						Black Friday deals have arrived!
+						<a href="<?php echo esc_url(self::OFFER_URL); ?>" class="bf-promo-banner__link">50% OFF all Pro Plugins</a>
+						<span class="bf-promo-banner__sparkle" aria-hidden="true">✨</span>
+					</h3>
+
+					<p class="bf-promo-banner__text">
+						Thanks for being part of the <strong>Bright Plugins</strong> family!<br>With major upgrades and new releases on the way, grab our lowest price of the year with a <a href="<?php echo esc_url(self::OFFER_URL); ?>" class="bf-promo-banner__link">50% discount</a>.<br><br>You'll lock in your discounted rate as long as you renew—valid on all plugins and our new <strong>Club Membership</strong>.<br>Make sure to maximize this opportunity!
+					</p>
+
+					<div class="bf-promo-banner__actions">
+						<a href="<?php echo esc_url(self::OFFER_URL); ?>" class="bf-promo-banner__btn">
+							Claim Your Discount Now!
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<style>
+			/* --- CSS Styles --- */
+			.bf-promo-banner {
+				position: relative;
+				display: flex;
+				align-items: center;
+				gap: 22px;
+				width: 100%;
+				margin: 20px 20px 0 0px;
+				padding: 18px 44px 18px 22px;
+				background: linear-gradient(180deg, #f7f7f7 0%, #ffffff 28%, #ffffff 100%);
+				border: 1px solid #dcdcde;
+				border-left: 4px solid #72aee6;
+				border-radius: 2px;
+				box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+				font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+				color: #1d2327;
+				box-sizing: border-box;
+			}
+
+			/* Image column (50% OFF) */
+			.bf-promo-banner__media {
+				flex-shrink: 0;
+			}
+
+			.bf-promo-banner__img {
+				display: block;
+				width: 150px;
+				height: auto;
+				height: 150px;
+				object-fit: cover;
+				border-radius: 10px;
+				box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+			}
+
+			/* Text content */
+			.bf-promo-banner__content {
+				flex: 1;
+				min-width: 0;
+			}
+
+			.bf-promo-banner__title {
+				margin: 0 0 10px 0;
+				font-size: 22px;
+				font-weight: 700;
+				line-height: 1.4;
+				color: #1d2327;
+			}
+
+			.bf-promo-banner__sparkle {
+				display: inline-block;
+				margin-left: 2px;
+				font-size: 15px;
+			}
+
+			.bf-promo-banner__text {
+				margin: 0 0 16px 0;
+				max-width: 880px;
+				font-size: 14px;
+				line-height: 1.55;
+				color: #2c3338;
+			}
+
+			/* Underlined purple links */
+			.bf-promo-banner__link {
+				color: #683078;
+				font-weight: 700;
+				text-decoration: underline;
+				text-underline-offset: 2px;
+				transition: color 0.15s ease;
+			}
+
+			.bf-promo-banner__link:hover,
+			.bf-promo-banner__link:focus {
+				color: #4f225c;
+			}
+
+			/* Main button (CTA) */
+			.bf-promo-banner__actions {
+				margin-top: 4px;
+			}
+
+			.bf-promo-banner__btn {
+				display: inline-block;
+				padding: 10px 18px;
+				background-color: #683078;
+				color: #ffffff;
+				font-size: 14px;
+				font-weight: 700;
+				line-height: 1.2;
+				text-decoration: none;
+				border-radius: 6px;
+				transition: background-color 0.2s ease, transform 0.1s ease;
+			}
+
+			.bf-promo-banner__btn:hover,
+			.bf-promo-banner__btn:focus {
+				background-color: #52245f;
+				color: #ffffff;
+			}
+
+			.bf-promo-banner__btn:active {
+				transform: translateY(1px);
+			}
+
+			/* Circular close button (top right corner) */
+			.bf-promo-banner__close {
+				position: absolute;
+				top: 12px;
+				right: 12px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				width: 18px;
+				height: 18px;
+				padding: 0;
+				background-color: #787c82;
+				color: #ffffff;
+				border: none;
+				border-radius: 50%;
+				font-size: 13px;
+				font-weight: 700;
+				line-height: 1;
+				cursor: pointer;
+				transition: background-color 0.15s ease;
+			}
+
+			.bf-promo-banner__close:hover,
+			.bf-promo-banner__close:focus {
+				background-color: #d63638;
+				outline: none;
+			}
+
+			/* Mobile adaptation */
+			@media (max-width: 600px) {
+				.bf-promo-banner {
+					flex-direction: column;
+					align-items: flex-start;
+					padding: 18px;
+				}
+			}
+		</style>
+
+		<script>
+			function bpDismissBfBannerAjax() {
+				document.getElementById('bf-promo-banner').style.display = 'none';
+
+				const formData = new URLSearchParams();
+				formData.append('action', 'bp_dismiss_bf_banner');
+				formData.append('nonce', '<?php echo esc_js( wp_create_nonce( "bp_bf_banner_nonce" ) ); ?>');
+
+				fetch(ajaxurl, {
+					method: 'POST',
+					body: formData
+				});
+			}
+		</script>
+
+	<?php
+	}
+
+	/**
+	 * 
+	 */
+	public function generate_pro_banner()
+	{
 
 		$is_cosm_page = is_admin() && isset($_GET['page']) && $_GET['page'] === 'wcbv-order-status-setting';
 
@@ -253,7 +497,7 @@ class Settings {
 		\CSF::createOptions( $prefix, array(
 			'menu_title'      => 'Order Status Settings',
 			'menu_slug'       => 'wcbv-order-status-setting',
-			'framework_title' => 'Custom Order Status Manager for WooCommerce <small> version: ' . esc_html( $version ) . '</small>',
+			'framework_title' => 'Custom Order Status Manager for WooCommerce <small> version: ' . esc_html($version) . '</small>',
 			'menu_type'       => 'submenu',
 			'menu_parent'     => 'brightplugins',
 			'nav'             => 'inline',
@@ -265,13 +509,13 @@ class Settings {
 		) );
 
 		// Create a section
-		\CSF::createSection( $prefix, array(
+		\CSF::createSection($prefix, array(
 			'title'  => 'General Settings',
 			'fields' => array(
 				array(
 					'id'      => 'orderstatus_default_status',
 					'type'    => 'select',
-					'title'   => __( 'Default Order Status', 'bp-custom-order-status' ),
+					'title'   => __('Default Order Status', 'bp-custom-order-status'),
 					'default' => 'bpos_disabled',
 					'options' => 'bpcosOrderStatusList',
 				),
@@ -307,62 +551,62 @@ class Settings {
 					'content' => apply_filters( 'cosm_upsale_notice', '' ),
 				),
 			),
-		) );
+		));
 
 		// Create a section
-        \CSF::createSection( $prefix, array(
-            'title'  => 'Payment Methods',
-            'fields' => array_merge(
-                array(
-                    // A Notice
+		\CSF::createSection($prefix, array(
+			'title'  => 'Payment Methods',
+			'fields' => array_merge(
+				array(
+					// A Notice
 					array(
 						'type'    => 'notice',
 						'style'   => 'info',
 						'content' => 'Is one of your payment methods not appearing on this page or is it not working properly? It is likely not compatible with the free version <br>Please contact us through our support portal: ' . '<a href="https://brightplugins.com/support/">' . 'Support' . '</a>',
 					),
-                ),
+				),
 				$this->getPaymentOptions(),
-            ) ,
-        ) );
+			),
+		));
 
 		/**
 		 * Upgrade to Club Membership section
 		 */
 
-		 add_filter( 'cosmbp_advertising_place', function(){
+		add_filter('cosmbp_advertising_place', function () {
 
 			$fire_icon = '<img draggable="false" role="img" class="emoji" alt="🔥" src="' . COSMBP_ASSETS . '/img/fire-icon.svg' . '">';
 
 			$upsale_notice = '<h3>' . $fire_icon . ' All Access Membership ' . $fire_icon . '</h3>';
 			$upsale_notice .= '<p>Unlock all 19 premium WooCommerce plugins with one club membership. <a href="' . self::CLUB_MEMBERSHIP_LINK . '">Join the Club</a></p>';
 
-			return wp_kses_post( $upsale_notice );
-		}  );
+			return wp_kses_post($upsale_notice);
+		});
 
-		\CSF::createSection( $prefix, array(
+		\CSF::createSection($prefix, array(
 			'title'  => 'Upgrade to Club Membership',
 			'icon'   => 'fas fa-lock',
 			'fields' => array(
 				array(
 					'type'    => 'notice',
 					'style'   => 'info',
-					'content' => apply_filters( 'cosmbp_advertising_place', '' ),
+					'content' => apply_filters('cosmbp_advertising_place', ''),
 				),
 				array(
 					'type'    => 'callback',
-					'function' => function(){
+					'function' => function () {
 						echo '<p><a href="' . self::CLUB_MEMBERSHIP_LINK . '"> <img style="max-width: 100%" src="' . COSMBP_ASSETS . '/img/pro-bp-plugins.png' . '"> </a></p>';
 					},
 				)
 			)
 		));
 
-				do_action( 'cosmbp_free_setting_section', $prefix );
+		do_action('cosmbp_free_setting_section', $prefix);
 
 		/**
 		 * If the pro version is activated so it cuts the flow bellow
 		 */
-		if( Bootstrap::is_pro_version_activated() ) {
+		if (Bootstrap::is_pro_version_activated()) {
 			return;
 		}
 
@@ -380,7 +624,7 @@ class Settings {
 				),
 				[
 					'type'     => 'callback',
-					'function' => [ $this, 'generate_blocked_rules_pro_feature' ],
+					'function' => [$this, 'generate_blocked_rules_pro_feature'],
 				],
 			],
 		));
@@ -391,35 +635,36 @@ class Settings {
 	 *
 	 * @return array
 	 */
-	public function getPaymentOptions() {
+	public function getPaymentOptions()
+	{
 		$payment_gateways = [];
 
 		// Validate WooCommerce Payment Gateways class availability
-		if ( ! class_exists( 'WC_Payment_Gateways' ) ) {
+		if (! class_exists('WC_Payment_Gateways')) {
 			return array();
 		}
 
 		try {
 			// Use the official WooCommerce method to get payment gateways instance
 			$payment_gateways_instance = \WC_Payment_Gateways::instance();
-			
+
 			// Verify the instance is valid and has the payment_gateways method
-			if ( ! method_exists( $payment_gateways_instance, 'payment_gateways' ) ) {
+			if (! method_exists($payment_gateways_instance, 'payment_gateways')) {
 				return array();
 			}
 
 			$available_payment_gateways = $payment_gateways_instance->payment_gateways();
-			
+
 			// Validate that payment_gateways() returned an array
-			if ( ! is_array( $available_payment_gateways ) ) {
+			if (! is_array($available_payment_gateways)) {
 				return array();
 			}
 
 			$payment_gateways = array();
 
-			foreach ( $available_payment_gateways as $key => $gateway ) {
+			foreach ($available_payment_gateways as $key => $gateway) {
 				// Validate that gateway is an object before accessing properties
-				if ( ! is_object( $gateway ) ) {
+				if (! is_object($gateway)) {
 					continue;
 				}
 
